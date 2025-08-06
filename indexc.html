@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chatbot</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f4f8; /* Light background */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    #chat-container {
+      background-color: #ffffff;
+      width: 400px;
+      max-width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    #chatbox {
+      flex-grow: 1;
+      padding: 20px;
+      overflow-y: auto;
+      height: 400px;
+      border-bottom: 2px solid #d1d8e0;
+      background-color: #f7faff;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .message {
+      margin: 10px 0;
+      padding: 12px;
+      border-radius: 20px;
+      max-width: 70%;
+      font-size: 16px;
+      line-height: 1.5;
+      word-wrap: break-word;
+      opacity: 0;
+      display: inline-block;
+      position: relative;
+      margin-bottom: 10px;
+    }
+
+    .user-message {
+      background-color: #d0e7ff;
+      color: #0056b3;
+      align-self: flex-start; /* Align user messages to the left */
+      animation: slideFromLeft 0.6s forwards; /* User message slides from left */
+    }
+
+    .bot-message {
+      background-color: #007bff;
+      color: white;
+      align-self: flex-end; /* Align bot messages to the right */
+      animation: slideFromRight 0.6s forwards; /* Bot message slides from right */
+    }
+
+    .message strong {
+      font-weight: bold;
+    }
+
+    #input-container {
+      display: flex;
+      padding: 10px;
+      background-color: #f7f7f7;
+      border-top: 2px solid #d1d8e0;
+      transition: background-color 0.3s;
+    }
+
+    #userInput {
+      width: 80%;
+      padding: 12px 15px;
+      font-size: 16px;
+      border-radius: 20px;
+      border: 2px solid #ccc;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    #userInput:focus {
+      border-color: #007bff;
+    }
+
+    #sendButton {
+      width: 15%;
+      padding: 12px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background-color 0.3s ease;
+    }
+
+    #sendButton:hover {
+      background-color: #0056b3;
+    }
+
+    #sendButton:active {
+      background-color: #003d75;
+    }
+
+    .arrow {
+      font-size: 22px;
+      transform: rotate(90deg);
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideFromLeft {
+      0% {
+        transform: translateX(-100%); /* Start off-screen to the left */
+        opacity: 0;
+      }
+      100% {
+        transform: translateX(0); /* End at the default position */
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideFromRight {
+      0% {
+        transform: translateX(100%); /* Start off-screen to the right */
+        opacity: 0;
+      }
+      100% {
+        transform: translateX(0); /* End at the default position */
+        opacity: 1;
+      }
+    }
+
+    /* Chat container responsiveness */
+    @media (max-width: 480px) {
+      #chat-container {
+        width: 100%;
+        border-radius: 10px;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <div id="chat-container">
+    <div id="chatbox"></div>
+
+    <div id="input-container">
+      <input type="text" id="userInput" placeholder="Ask me something..." />
+      <button id="sendButton" onclick="sendMessage()">
+        <span class="arrow">➔</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    function sendMessage() {
+      const inputField = document.getElementById("userInput");
+      const userMessage = inputField.value;
+      const chatbox = document.getElementById("chatbox");
+
+      if (!userMessage.trim()) return; // Prevent sending empty messages
+
+      // Display the user's message in the chatbox
+      chatbox.innerHTML += `<div class="message user-message"><strong>You:</strong> ${userMessage}</div>`;
+
+      // Log the message before sending
+      console.log("Sending message:", userMessage);
+
+      // Send the message to the server via AJAX
+      fetch('http://localhost:3000/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: userMessage }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Display the bot's response in the chatbox
+        console.log("Bot response:", data.response);
+        chatbox.innerHTML += `<div class="message bot-message"><strong>Chatbot:</strong> ${data.response}</div>`;
+        chatbox.scrollTop = chatbox.scrollHeight;  // Scroll to the bottom
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        chatbox.innerHTML += `<div class="message bot-message"><strong>Chatbot:</strong> Something went wrong. Please try again later.</div>`;
+      });
+
+      // Clear the input field
+      inputField.value = "";
+    }
+  </script>
+
+</body>
+</html>
