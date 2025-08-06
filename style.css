@@ -144,7 +144,7 @@ h3{
     box-shadow: 15px 15px 20px rgba(2, 78, 88, 0.3);
 }
 .box1i{
-  background-image:url("box-mat.JPG");
+  background-image:url("box-mat.jpg");
 }
 .box2i{
   background-image:url("round-mat-full1.png");
@@ -266,22 +266,22 @@ padding:25px;
   color:grey;
 }
 .pic1i{
-background-image: url("pinknblue1.JPG");
+background-image: url("pinknblue1.jpg");
 }
 .pic2i{
-background-image: url("green-big1.JPG");
+background-image: url("green-big1.jpg");
 }
 .pic3i{
-background-image: url("green-silk1.JPG");
+background-image: url("green-silk1.jpg");
 }
 .pic4i{
-background-image: url("pink-big1.JPG");
+background-image: url("pink-big1.jpg");
 }
 .pic5i{
-background-image: url("light-blue1.JPG");
+background-image: url("light-blue1.jpg");
 }
 .pic6i{
-background-image: url("pink.JPG");
+background-image: url("pink.jpg");
 }
 .reviews-section {
     padding: 15px;
@@ -495,4 +495,5 @@ background-image: url("pink.JPG");
     .mylogo, .bar, .n {
         margin: 5px 0;
     }
+
 }
